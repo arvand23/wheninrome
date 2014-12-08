@@ -1,0 +1,66 @@
+<!-- put in header partial later -->
+<ul class="nav navbar-nav navbar-right">
+        <li><%= link_to "Home", root_path %></li>
+        <li><%= link_to "About", static_about_path %></li>
+        <% if user_signed_in? %>
+          <li><%= link_to "Log out", destroy_user_session_path, method: :delete %></li>
+        <% else %>
+        	<li><%= link_to "Log in", new_user_session_path, class: "btn btn-default btn-lg" %></li>
+         	<li><%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary btn-lg" %></li>
+        <% end %>
+</ul>
+
+
+
+<div>
+     <h1>Home</h1>
+     <% if user_signed_in? %>
+          <h3>you're logged in</h3>
+      		</br></br>
+          <h3>Who do you wanna host?</h3>
+          	<!-- only display trips that do not have an accepted at, and that the user has not declined -->
+          	<% @alltrips.each do |x| %>
+          		</br>City: <%= x.city %></br> <!-- ?display city_name? -->
+          		</br>Email: <%= x.email %></br>
+          		</br>Guests: <%= x.number_of_people %></br>
+          		</br>Date: <%= x.start_date%> </br>
+          	<% end %>
+          	</br></br>
+        	
+
+          <!--	Accept | Decline --> <!-- SUBMITTING RESERVATION ID BUT NOT ACCEPTED AT / DECLINED AT -->
+        <%=form_for(@reservationinput) do |x| %>
+		  	Accept: </br>
+		  	<%= x.radio_button :accepted_at, true %></br></br>
+		  	Decline: </br>
+		  	<%= x.radio_button :declined_at, true, :checked=> true %></br></br>
+		<%= x.submit "Submit" %>  <!-- submits to trip's create action -->
+		<% end %>
+
+          	</br></br>
+          <h3>Upcoming Hostings</h3>
+     <% else %>
+       <p>
+
+       </p>
+  	<%= @lasttrip %>
+
+  	<%=form_for(@tripinput) do |x| %>
+	  	Email: </br>
+	  	<%= x.text_field :email %>
+	  	</br></br>
+	  	Guests: </br>
+	  	<%= x.select(:number_of_people, options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4], ['5', 5]])) %> 
+	  	<!-- the key is what shows up to the user, the value is what gets put into the db -->
+	  	</br></br>
+	  	Whereone:</br>
+	  	<%= x.select(:city_id, options_for_select([['Helsinki', 1]])) %> 
+	  	</br></br>
+	  	When: </br>
+	  	<%= x.datetime_field :start_date %>
+	  	</br></br>
+	  	<%= x.submit "Find me a Host" %>  <!-- submits to trip's create action -->
+	<% end %>
+  	
+</div>
+  	<% end %>  <!-- ends the else statement of if user_signed_in?-->
