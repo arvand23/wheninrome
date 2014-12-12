@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141129231454) do
+ActiveRecord::Schema.define(version: 20141208230358) do
 
   create_table "cities", force: true do |t|
     t.string   "city_name"
@@ -19,17 +19,6 @@ ActiveRecord::Schema.define(version: 20141129231454) do
     t.datetime "updated_at"
     t.integer  "trip_id"
     t.integer  "user_id"
-  end
-
-  create_table "reservations", force: true do |t|
-    t.datetime "accepted_at"
-    t.datetime "declined_at"
-    t.string   "complete_code"
-    t.string   "card_id"
-    t.string   "permalink"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "trip_id"
   end
 
   create_table "trips", force: true do |t|
@@ -40,6 +29,11 @@ ActiveRecord::Schema.define(version: 20141129231454) do
     t.integer  "city_id"
     t.integer  "reservation_id"
     t.datetime "start_date"
+    t.datetime "accepted_at"
+    t.datetime "declined_at"
+    t.string   "card_id"
+    t.string   "complete_code"
+    t.integer  "user_id"
   end
 
   create_table "users", force: true do |t|

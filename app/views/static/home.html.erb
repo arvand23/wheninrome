@@ -3,6 +3,7 @@
         <li><%= link_to "Home", root_path %></li>
         <li><%= link_to "About", static_about_path %></li>
         <% if user_signed_in? %>
+          <li><%= current_user.email %>
           <li><%= link_to "Log out", destroy_user_session_path, method: :delete %></li>
         <% else %>
         	<li><%= link_to "Log in", new_user_session_path, class: "btn btn-default btn-lg" %></li>
@@ -19,25 +20,28 @@
       		</br></br>
           <h3>Who do you wanna host?</h3>
           	<!-- only display trips that do not have an accepted at, and that the user has not declined -->
-          	<% @alltrips.each do |x| %>
-          		</br>City: <%= x.city %></br> <!-- ?display city_name? -->
-          		</br>Email: <%= x.email %></br>
-          		</br>Guests: <%= x.number_of_people %></br>
-          		</br>Date: <%= x.start_date%> </br>
+          	<% @trips.each do |trip| %>
+              <!-- josh originally put this in the trips/tip partial but i just moved it back out -->
+              </br>City: <%= trip.city.city_name %></br> <!-- ?display city_name? -->
+              </br>Email: <%= trip.email %></br>
+              </br>Guests: <%= trip.number_of_people %></br>
+              </br>Date: <%= trip.start_date%> </br>
+
+
+              <div class="actions">
+                <%= link_to 'Accept', accept_trip_path(trip), confirm: 'Are you sure?' %>
+                <%= link_to 'Decline', decline_trip_path(trip), confirm: 'Are you sure?' %>
+              </div>
           	<% end %>
-          	</br></br>
-        	
-
-          <!--	Accept | Decline --> <!-- SUBMITTING RESERVATION ID BUT NOT ACCEPTED AT / DECLINED AT -->
-        <%=form_for(@reservationinput) do |x| %>
-		  	Accept: </br>
-		  	<%= x.radio_button :accepted_at, true %></br></br>
-		  	Decline: </br>
-		  	<%= x.radio_button :declined_at, true, :checked=> true %></br></br>
-		<%= x.submit "Submit" %>  <!-- submits to trip's create action -->
-		<% end %>
 
           	</br></br>
+          <% if user_signed_in? %>
+          <h3>My Hostings</h3>
+            <% @my_trips.each do |trip| %>
+              <%= render partial: 'trips/trip', locals: { balls: trip } %>
+            <% end %>
+          <% end %>
+
           <h3>Upcoming Hostings</h3>
      <% else %>
        <p>
