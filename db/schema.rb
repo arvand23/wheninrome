@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208230358) do
+ActiveRecord::Schema.define(version: 20141212050024) do
 
   create_table "cities", force: true do |t|
     t.string   "city_name"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20141208230358) do
     t.string   "card_id"
     t.string   "complete_code"
     t.integer  "user_id"
+    t.string   "permalink"
   end
 
   create_table "users", force: true do |t|
