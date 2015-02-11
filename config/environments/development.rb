@@ -1,5 +1,5 @@
 Wheninrome2::Application.configure do
-  config.action_mailer.default_url_options = { :host => 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { :host => 'localhost', port: 3000 }  #added by JV for mailer-- when its live localhost would be www....com and no port and this would go into production.rb
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on

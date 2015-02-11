@@ -1,11 +1,27 @@
-<h2> Form for - <%= @travellerinput.email %></h2>
+<h2> Form for - <%= @trip.email %></h2>
 
 
-<!-- http://localhost:3000/trips/84885c35ebb07dab72e6ab68c1ba485c9f582a2b/checkout -->
+<!-- http://localhost:3000/trips/84885c35ebb07dab72e6ab68c1ba485c9f582a2b/reserve -->
 
 Stripe shit
 
+<%= form_for @trip, url: reserve_trip_path(@trip.permalink), method: 'POST' do %>
+  <article>
+    <label class="amount">
+      <span>Amount: $9.99</span>
+    </label>
+  </article>
+
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+          data-description="Your trip"
+          data-amount="999"
+          data-email="<%= @trip.email %>"></script>
+<% end %>
+
 	<!-- hidden field where stripe populates card ID
+
+	
 
 	1 form that doesnt submit to rails... users card information, button goes to stripe
 	1 form that does submit to rails, passes the card ID from stripe ... pay action in trips controller-->

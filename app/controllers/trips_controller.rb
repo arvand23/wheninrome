@@ -2,12 +2,12 @@ class TripsController < ApplicationController
 	 #created for the submit action in home
    ###whenever theres an action that doesnt have a view associated with it you need to end it with a redirect_to :something
   def create
-  	@trip = Trip.new(trip_params) #changed from params[:id] which was saving as nil  #user .new when ur creating an entry and .find paramsid when u have one and doing something to it
+  	@tripinput = Trip.new(trip_params) #changed from params[:id] which was saving as nil  #user .new when ur creating an entry and .find paramsid when u have one and doing something to it
 
-  	if @trip.save
+  	if @tripinput.save
   		redirect_to root_path, :notice => "A host will email #{Trip.last.email}!"  #change you to the email they just submitted Trip.last.email
   	else
-  		render root_path, :alert => "err"
+  		render static_home_path #changed from redirect_to root_path because that loses all variables therefore loses the erro. changed render root_path, not sure why render root_path didn't work
   	end
   end
 
@@ -17,6 +17,8 @@ class TripsController < ApplicationController
   	NotificationMailer.checkout(@trip).deliver  #checkout generates it, deliver sends it
     redirect_to :back, :notice => "Once #{@trip.email} makes a payment, you'll be notified to host him." #puts user back where they were
   end
+
+
 
 
 
@@ -32,19 +34,36 @@ class TripsController < ApplicationController
 #pass trip object (trip.find) into mailer
 
 
-  def checkout  #originally made this so that trips/checkout URL works
+  def checkout  #originally made this so that trips/checkout URL works  #show a cc form
     #grab a trip ID
-    @travellerinput = Trip.accepted.find_by_permalink(params[:id])    #only trips that have been accepted, so trips that havent been accepted nothing will show. accepted defined in trip.rb. it was Trip.accepted.find(params[:id])
+    @trip = Trip.accepted.find_by_permalink(params[:id])    #only trips that have been accepted, so trips that havent been accepted nothing will show. accepted defined in trip.rb. it was Trip.accepted.find(params[:id]) can be anything
   end
+  #http://localhost:3000/trips/fb309674c856b1792df628012825230344a610de/checkout
 
 
-  def pay
+  def reserve  #JV told me to add this
     #button they click that submits the data
-    @trip = Trip.find(params[:id])
-    if @trip.update_attributes(stripe_params)
-      #redirect success... create a success view?
+    @trip = Trip.find_by_permalink(params[:id])
+    if @trip # If a trip is found
+
+      # Create a customer to bill later with stripe
+      customer = Stripe::Customer.create(
+        :email => @trip.email,
+        :card  => params[:stripeToken]
+      )
+
+      # Save stripe customer id into card_id 
+      if @trip.update_attribute(:card_id, customer.id) # Card ID / Customer ID = Same same
+        NotificationMailer.notifyhost(@trip).deliver # i added
+        NotificationMailer.notifytraveller(@trip).deliver # i added
+        redirect_to thanks_trip_path(@trip.permalink)
+      else
+        # Form failed
+        render :checkout
+      end
     else
-      render :checkout
+      # This should never happen
+      render text: "WHAT?"
     end
   end
 
@@ -54,7 +73,7 @@ class TripsController < ApplicationController
     	params.require(:trip).permit(:email, :number_of_people, :city_id, :start_date)
   	end
 
-    def stripe_params
+    def stripe_params  #JV
       params.require(:trip).permit(:card_id)
     end
 

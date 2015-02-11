@@ -18,9 +18,10 @@
      <% if user_signed_in? %>
           <h3>you're logged in</h3>
       		</br></br>
+
           <h3>Who do you wanna host?</h3>
           	<!-- only display trips that do not have an accepted at, and that the user has not declined -->
-          	<% @trips.each do |trip| %>
+          	<% @unresponded.each do |trip| %>
               <!-- josh originally put this in the trips/tip partial but i just moved it back out -->
               </br>City: <%= trip.city.city_name %></br> <!-- ?display city_name? -->
               </br>Email: <%= trip.email %></br>
@@ -35,21 +36,40 @@
           	<% end %>
 
           	</br></br>
-          <% if user_signed_in? %>
-          <h3>My Hostings</h3>
+
+
+            <h3>My Hostings (you accepted these people but they haven't paid)</h3>
             <% @my_trips.each do |trip| %>
               <%= render partial: 'trips/trip', locals: { balls: trip } %>
             <% end %>
-          <% end %>
+ 
 
-          <h3>Upcoming Hostings</h3>
-     <% else %>
+          <h3>Upcoming Hostings: email these guys to set up hosting and get their complete code to get paid (these ppl have paid... complete code field will go here)</h3>
+            <% @paid.each do |trip| %>
+              </br>City: <%= trip.city.city_name %></br>
+              </br>Email: <%= trip.email %></br>
+              </br>Guests: <%= trip.number_of_people %></br>
+              </br>Date: <%= trip.start_date%> </br>
+              <!-- complete code field -->
+            <% end %>
+
+     <% else %> <!-- not logged in -->
        <p>
 
        </p>
   	<%= @lasttrip %>
 
   	<%=form_for(@tripinput) do |x| %>
+      <!-- for validation errors... not working. working now changed something in controller, see notes -->
+        <% if @tripinput.errors.any? %>
+          <h2><%= pluralize(@tripinput.errors.count, "error")%> made this not save </h2>
+          <ul>
+            <% @tripinput.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <!-- the above code isnt working -->
 	  	Email: </br>
 	  	<%= x.text_field :email %>
 	  	</br></br>
@@ -61,7 +81,7 @@
 	  	<%= x.select(:city_id, options_for_select([['Helsinki', 1]])) %> 
 	  	</br></br>
 	  	When: </br>
-	  	<%= x.datetime_field :start_date %>
+	  	<%= x.date_select :start_date %>
 	  	</br></br>
 	  	<%= x.submit "Find me a Host" %>  <!-- submits to trip's create action -->
 	<% end %>
