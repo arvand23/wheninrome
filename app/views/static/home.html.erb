@@ -44,15 +44,18 @@
             <% end %>
  
 
-          <h3>Upcoming Hostings: email these guys to set up hosting and get their complete code to get paid (these ppl have paid... complete code field will go here)</h3>
+          <h3>Upcoming Hostings: (these ppl have put in their CC... complete code field will go here)</h3>
             <% @paid.each do |trip| %>
               </br>City: <%= trip.city.city_name %></br>
               </br>Email: <%= trip.email %></br>
               </br>Guests: <%= trip.number_of_people %></br>
               </br>Date: <%= trip.start_date%> </br>
-              <!-- complete code field -->
+              <!-- button to charge them --><!-- later complete code field -->
+              </br>
+              <%= link_to 'Charge User', charge_trip_path(trip), confirm: 'Did you go HAM with this user? This will charge them.' %>
+              </br></br></br>
             <% end %>
-
+          
      <% else %> <!-- not logged in -->
        <p>
 
@@ -60,7 +63,7 @@
   	<%= @lasttrip %>
 
   	<%=form_for(@tripinput) do |x| %>
-      <!-- for validation errors... not working. working now changed something in controller, see notes -->
+      <!-- for validation errors... not working. working now changed something in controller... changed trip to tripinput to match trips controller -->
         <% if @tripinput.errors.any? %>
           <h2><%= pluralize(@tripinput.errors.count, "error")%> made this not save </h2>
           <ul>

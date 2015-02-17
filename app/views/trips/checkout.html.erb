@@ -1,9 +1,13 @@
-<h2> Form for - <%= @trip.email %></h2>
+<h2> Confirm your trip <%= @trip.email %></h2>
 
 
-<!-- http://localhost:3000/trips/84885c35ebb07dab72e6ab68c1ba485c9f582a2b/reserve -->
+<!-- http://localhost:3000/trips/84885c35ebb07dab72e6ab68c1ba485c9f582a2b/reserve 
 
-Stripe shit
+http://localhost:3000/trips/fb309674c856b1792df628012825230344a610de/checkout
+
+-->
+
+You'll only be charged after you and your host go HAM
 
 <%= form_for @trip, url: reserve_trip_path(@trip.permalink), method: 'POST' do %>
   <article>
@@ -18,6 +22,9 @@ Stripe shit
           data-amount="999"
           data-email="<%= @trip.email %>"></script>
 <% end %>
+
+  <!-- ~ users cc should be stored and card id should be stored... under trips#reserve -->
+
 
 	<!-- hidden field where stripe populates card ID
 

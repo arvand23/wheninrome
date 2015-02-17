@@ -31,25 +31,89 @@ class TripsController < ApplicationController
   end
 
 
+  def charge #~~host hits charge on users who have 'paid'
+   
+
+   @trip = Trip.find(params[:id])
+
+    begin  #like if else but crashes whole application and 'rescuse it'. when stripe charge create fails it doesnt return a value, it blows up. so you need a rescue. it handles error being thrown.
+      stripe_response = Stripe::Charge.create(  #stripe_response is arbitrary variable, just for charge_id
+        :amount => 999, # in cents
+        :currency => "usd",
+        :customer => @trip.card_id  
+        )
+
+      #@trip.charged_at = Time.now
+      @trip.complete_code = stripe_response.id
+      @trip.save
+      #the above two require that you add 2 columns to trips table: charged_at (datetime)
+
+      render text: 'success'
+
+    # Do your success here
+    rescue Exception => e
+      render text: 'failed'
+
+    # Do your failure here
+
+    end
+
+
+
+
+
+
+
+    #the following wouldve worked except for the render piece. 
+    #@trip = Trip.find(params[:id])  #~~~??? why not @trip = Trip.find_by_permalink(params[:id])
+
+    #@response = Stripe::Charge.create(
+    # :amount => 999, # in cents
+    # :currency => "usd",
+    # :customer => @trip.card_id  
+    # )
+    #render static_home_path, :notice => "You just charged #{Trip.last.email} $9.99!"
+    #above must be removed because you dont have the variables. all the varaibles need to be in this action
+
+
+
+
+
+
+
+
+   #GRAB COMPLETE_CODE (somehow?) Trip.complete_code
+    #if @trip.update_attribute(:complete_code, customer.id)
+
+    #render static_home_path, :notice => "You just charged #{Trip.last.email} $9.99!"
+    #above must be removed because you dont have the variables. all the varaibles need to be in this action
+    #render static_home_path, :notice => "You just charged #{Trip.last.email} $9.99!"
+
+
+    #else redirect_to :back, :notice => "Something failed. They weren't charged."
+  end
+
 #pass trip object (trip.find) into mailer
 
-
+  #whats the checkout action for again?
   def checkout  #originally made this so that trips/checkout URL works  #show a cc form
     #grab a trip ID
     @trip = Trip.accepted.find_by_permalink(params[:id])    #only trips that have been accepted, so trips that havent been accepted nothing will show. accepted defined in trip.rb. it was Trip.accepted.find(params[:id]) can be anything
   end
-  #http://localhost:3000/trips/fb309674c856b1792df628012825230344a610de/checkout
+  #8
 
 
   def reserve  #JV told me to add this
     #button they click that submits the data
-    @trip = Trip.find_by_permalink(params[:id])
+    #ADDS card ID
+    @trip = Trip.find_by_permalink(params[:id])  #is this line so that they have to access the page via a permalink?
     if @trip # If a trip is found
 
       # Create a customer to bill later with stripe
       customer = Stripe::Customer.create(
         :email => @trip.email,
         :card  => params[:stripeToken]
+      #customer => trip.card_id
       )
 
       # Save stripe customer id into card_id 
