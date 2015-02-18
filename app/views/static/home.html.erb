@@ -45,7 +45,7 @@
  
 
           <h3>Upcoming Hostings: (these ppl have put in their CC... complete code field will go here)</h3>
-            <% @paid.each do |trip| %>
+            <% @peopletocharge.each do |trip| %><!-- people who have a card id but not a complete code -->
               </br>City: <%= trip.city.city_name %></br>
               </br>Email: <%= trip.email %></br>
               </br>Guests: <%= trip.number_of_people %></br>

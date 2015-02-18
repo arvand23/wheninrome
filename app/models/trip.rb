@@ -16,7 +16,10 @@ class Trip < ActiveRecord::Base
 	def self.undeclined; where('declined_at IS NULL'); end #need to change so its undeclined only by that specific user
 	def self.past; where('start_date < :nowminustwo', :nowminustwo => Time.now - 2.days); end #didn't test this to see if it works
 	def self.unresponded; unaccepted.undeclined; end #no one has accepted and no one has declined these people
+	
+	def self.notcharged; where('complete_code IS NULL'); end
 	def self.paid; where('card_id IS NOT NULL'); end #need to change so that its accepted by that specific user and card is not null
+	def self.peopletocharge; notcharged.paid; end
 
 	def generate_permalink
  		Digest::SHA1.hexdigest("#{Time.now} - #{self.id} - #{self.email}")

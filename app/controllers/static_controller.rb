@@ -7,6 +7,8 @@ class StaticController < ApplicationController
 	  	@my_trips = Trip.where("user_id = ?", current_user.id) #find trips where user id equals current user id
       @unresponded = Trip.unresponded #no one has accepted and no one has declined these people.
 	   end
+
+     @peopletocharge = Trip.peopletocharge
   end
 
   def contact
