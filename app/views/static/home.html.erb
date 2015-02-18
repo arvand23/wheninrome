@@ -37,12 +37,12 @@
 
           	</br></br>
 
-
-            <h3>My Hostings (you accepted these people but they haven't paid)</h3>
+            <!--
+            <h3>My Hostings (you accepted these people)</h3>
             <% @my_trips.each do |trip| %>
               <%= render partial: 'trips/trip', locals: { balls: trip } %>
             <% end %>
- 
+            -->
 
           <h3>Upcoming Hostings: (these ppl have put in their CC... complete code field will go here)</h3>
             <% @peopletocharge.each do |trip| %><!-- people who have a card id but not a complete code -->
