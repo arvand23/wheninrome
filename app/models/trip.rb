@@ -34,7 +34,18 @@ class Trip < ActiveRecord::Base
   	end
 
 
+	def generate_charge_guid(length = 5)
+ 		n = []
+		length.times { n << rand(9) } 
+		n.join("")
 
+  	end
+
+  	def add_charge_guid(user)
+  		self.user_id = user.id
+  		self.charge_guid = generate_charge_guid
+  		self.save
+  	end
 
 
 

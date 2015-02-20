@@ -52,9 +52,31 @@
               </br>Date: <%= trip.start_date%> </br>
               <!-- button to charge them --><!-- later complete code field -->
               </br>
-              <%= link_to 'Charge User', charge_trip_path(trip), confirm: 'Did you go HAM with this user? This will charge them.' %>
+              <!--<%= link_to 'Charge User', charge_trip_path(trip), confirm: 'Did you go HAM with this user? This will charge them.' %>-->
               </br></br></br>
+
+
+              <!--<%=form_for(@charge_guid_entered) do |trip| %>
+                </br>
+                Receipt Code: </br>
+                <%= trip.text_field :charge_guid %>
+                <%= link_to 'Charge User', charge_trip_path(trip), confirm: 'Did you go HAM with this user? This will charge them.' %>
+              <% end %>-->
+
+
+              <!-- non model form -->
+              <%= form_tag charge_trip_path(trip) do %> 
+                <%= text_field_tag "entered" %>
+                <%= submit_tag "Save" %>
+              <% end %>
+
             <% end %>
+
+
+
+            
+
+
           
      <% else %> <!-- not logged in -->
        <p>

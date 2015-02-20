@@ -12,7 +12,7 @@ Wheninrome2::Application.routes.draw do
       get :checkout #I'm gonna think of it as this is an action on the trips controller so im gonna put it under resources trips. # checkout_trip_url (full url instead of _path)
       post :reserve # THIS JUST SAVES THE CARD AND REDIRECTS does not render a view reserve_trip_path
       get :thanks #success screen
-      get :charge #host hits charge on users who have 'paid'
+      post :charge #host hits charge on users who have 'paid' // change to post because form_tag is post. keep as get if u add method: get to form_tag
     end
   end
 

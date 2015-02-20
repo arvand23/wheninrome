@@ -32,9 +32,19 @@ class TripsController < ApplicationController
 
 
   def charge #~~host hits charge on users who have 'paid'
+
+  #@charge_guid_entered = Trip.new(charge_params)
+
+
+
+  @entered = params[:entered]
    
 
    @trip = Trip.find(params[:id])
+
+
+
+   if @entered == @trip.charge_guid
 
     begin  #like if else but crashes whole application and 'rescuse it'. when stripe charge create fails it doesnt return a value, it blows up. so you need a rescue. it handles error being thrown.
       stripe_response = Stripe::Charge.create(  #stripe_response is arbitrary variable, just for charge_id
@@ -43,12 +53,23 @@ class TripsController < ApplicationController
         :customer => @trip.card_id  
         )
 
+
+    #***ADD the code for if GUID matches what's stored, then charge action happens
+    #@charge_guid_entered = Trip.new(charge_params)
+    #if @charge_guid_entered == Trip.charge_guid
+      #charge em
+    #else
+      #don't charge em
+
+
+
       #@trip.charged_at = Time.now
       @trip.complete_code = stripe_response.id
       @trip.save
       #the above two require that you add 2 columns to trips table: charged_at (datetime)
 
-      render text: 'success'
+      render text: 'success, you charged them'
+      
 
     # Do your success here
     rescue Exception => e
@@ -59,6 +80,10 @@ class TripsController < ApplicationController
     end
 
 
+
+  else
+    render text: 'You entered the wrong receipt code'
+  end
 
 
 
@@ -116,6 +141,10 @@ class TripsController < ApplicationController
       #customer => trip.card_id
       )
 
+      #***generate the charge GUID and store it
+      @trip.add_charge_guid(current_user)  #this should generate and add a charge_guid when the user enters their card info. this charge_guid should be emailed to them as a part of their receipt.
+
+
       # Save stripe customer id into card_id 
       if @trip.update_attribute(:card_id, customer.id) # Card ID / Customer ID = Same same
         NotificationMailer.notifyhost(@trip).deliver # i added
@@ -140,5 +169,9 @@ class TripsController < ApplicationController
     def stripe_params  #JV
       params.require(:trip).permit(:card_id)
     end
+
+    #def charge_params 
+    #  params.require(:trip).permit(:charge_guid)
+    #end
 
 end
