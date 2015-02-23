@@ -14,7 +14,7 @@ class NotificationMailer < ActionMailer::Base
 
   def notifytraveller(trip)
   	@trip = trip 
-  	mail(to: @trip.email, subject: 'You paid bro')
+  	mail(to: @trip.email, subject: 'You input your card bro')
   end
 
 end

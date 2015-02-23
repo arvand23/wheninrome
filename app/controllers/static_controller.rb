@@ -3,7 +3,7 @@ class StaticController < ApplicationController
   	@tripinput = Trip.new #required for field. empty trip object available to the view, ie all values are nil
   	
 
-    @charge_guid_entered = Trip.new  #added this because other wise it was saying nil value for charge_guid_entered
+    @charge_guid_entered = Trip.new  #DONT NEED THIS. added this because other wise it was saying nil value for charge_guid_entered
     
 
     # @unresponded = Trip.unresponded #no one has accepted and no one has declined these people.
