@@ -1,4 +1,6 @@
 Wheninrome2::Application.routes.draw do
+  
+
   get "static/home"
   get "static/contact"
   get "static/about"
@@ -18,6 +20,12 @@ Wheninrome2::Application.routes.draw do
 
   resources :cities
   resources :charges
+  
+  resources :declines do
+    member do
+      get :realdecline
+    end
+  end
 
   root 'static#home'
 

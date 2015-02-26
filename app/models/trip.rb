@@ -1,6 +1,7 @@
 class Trip < ActiveRecord::Base
 	belongs_to :city
 	belongs_to :user
+	has_many :declines
 	validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}
 	#add this to email validation    
 	validate :start_date_in_future?

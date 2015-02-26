@@ -6,4 +6,5 @@ class User < ActiveRecord::Base
 
   belongs_to :city
   has_many :trips
+  has_many :declines 
 end
