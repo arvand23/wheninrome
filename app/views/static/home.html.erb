@@ -21,7 +21,7 @@
 
           <h3>Who do you wanna host?</h3>
           	<!-- only display trips that do not have an accepted at, and that the user has not declined -->
-          	<% @unresponded.each do |trip| %>
+          	<% @user_can_accept_these.each do |trip| %>
               <!-- josh originally put this in the trips/tip partial but i just moved it back out -->
               </br>City: <%= trip.city.city_name %></br> <!-- ?display city_name? -->
               </br>Email: <%= trip.email %></br>
